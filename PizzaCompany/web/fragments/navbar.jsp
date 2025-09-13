@@ -1,0 +1,33 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link rel="stylesheet" href="css/navbar.css"/>
+<nav class="navbar">
+    <ul>
+        <li class="brand"><a href="HomeController">PizzaStore</a></li>
+        <!-- Liên kết luôn hiển thị -->
+        <li><a href="HomeController">Pizzas</a></li>
+        <li><a href="categories.jsp">Categories</a></li>
+        <li><a href="reviews.jsp">Reviews</a></li>
+
+        <!-- Bổ sung cho Normal User -->
+        <c:if test="${sessionScope.account != null && sessionScope.account.type == 2}">
+            <li><a href="orders-history.jsp">Orders history</a></li>
+        </c:if>
+
+        <!-- Bổ sung cho Admin -->
+        <c:if test="${sessionScope.account != null && sessionScope.account.type == 1}">
+            <li><a href="orders.jsp">Orders</a></li>
+            <li style="color:#fff; padding:14px 20px;">Welcome, ${sessionScope.account.userName}</li>
+        </c:if>
+
+        <!-- Khu vực nút hành động bên phải -->
+        <c:choose>
+            <c:when test="${sessionScope.account == null}">
+                <li class="right"><a href="register.jsp">Register</a></li>
+                <li class="right"><a href="login.jsp">Log In</a></li>
+            </c:when>
+            <c:otherwise>
+                <li class="right"><a href="LogoutController">Log Out</a></li>
+            </c:otherwise>
+        </c:choose>
+    </ul>
+</nav>
