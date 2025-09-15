@@ -45,7 +45,19 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         try {
-            List<Product> products = ProductDAO.getAllProducts();
+            String keyword = request.getParameter("keyword");
+            String minPriceStr = request.getParameter("minPrice");
+            String maxPriceStr = request.getParameter("maxPrice");
+            
+            Double minPrice = (minPriceStr != null && !minPriceStr.trim().isEmpty()) ? Double.parseDouble(minPriceStr.trim()) : null;
+            Double maxPrice = (maxPriceStr != null && !maxPriceStr.trim().isEmpty()) ? Double.parseDouble(maxPriceStr.trim()) : null;
+            
+            List<Product> products;
+            if ((keyword != null && !keyword.trim().isEmpty()) || minPrice != null || maxPrice != null) {
+                products = ProductDAO.searchProducts(keyword, minPrice, maxPrice);
+            } else {
+                products = ProductDAO.getAllProducts();
+            }
           
             request.setAttribute("products", products);
             request.getRequestDispatcher("home.jsp").forward(request, response);

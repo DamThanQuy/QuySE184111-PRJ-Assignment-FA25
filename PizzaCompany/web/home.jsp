@@ -25,6 +25,10 @@
             <form action="HomeController" method="get" class="search-box">
                 <label for="search">Search: </label>
                 <input id="search" type="text" name="keyword" placeholder="Search pizzas..." value="${param.keyword}"/>
+                <label for="minPrice">Min Price: </label>
+                <input id="minPrice" type="number" name="minPrice" placeholder="Min Price" value="${param.minPrice}" step="0.01"/>
+                <label for="maxPrice">Max Price: </label>
+                <input id="maxPrice" type="number" name="maxPrice" placeholder="Max Price" value="${param.maxPrice}" step="0.01"/>
                 <input type="submit" value="Search" />
             </form>
 
