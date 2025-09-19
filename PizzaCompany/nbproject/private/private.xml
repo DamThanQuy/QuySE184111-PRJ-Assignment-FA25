@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/STUDY/KY4/PRJ-3/PizzaCompany/src/java/DAO/AccountDAO.java</file>
-            <file>file:/D:/STUDY/KY4/PRJ-3/PizzaCompany/src/java/Controllers/LoginController.java</file>
-            <file>file:/D:/STUDY/KY4/PRJ-3/PizzaCompany/src/java/Models/Account.java</file>
-            <file>file:/D:/STUDY/KY4/PRJ-3/PizzaCompany/web/login.jsp</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Controllers/EditProductController.java</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Controllers/HomeController.java</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Controllers/AdminController.java</file>
         </group>
     </open-files>
 </project-private>

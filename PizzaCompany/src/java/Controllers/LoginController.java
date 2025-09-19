@@ -15,23 +15,9 @@ import Models.Account;
 import DAO.AccountDAO;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author QUYDAM
- */
+
 public class LoginController extends HttpServlet {
-   
- 
 
- 
-
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -48,7 +34,7 @@ public class LoginController extends HttpServlet {
             // Kiểm tra role và redirect
             if (account.getType() == 1) {
                 // Admin
-                response.sendRedirect("admin-dashboard.jsp");
+                response.sendRedirect("AdminController");
             } else {
                 // User
                 response.sendRedirect("HomeController");
