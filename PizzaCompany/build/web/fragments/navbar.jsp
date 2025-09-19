@@ -15,7 +15,6 @@
 
         <!-- Bo sung cho Admin -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 1}">
-            <li><a href="orders.jsp">Orders</a></li>
             <li style="color:#fff; padding:14px 20px;">Welcome, ${sessionScope.account.userName}</li>
         </c:if>
 

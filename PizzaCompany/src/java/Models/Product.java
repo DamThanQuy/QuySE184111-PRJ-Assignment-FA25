@@ -10,6 +10,7 @@ public class Product {
     private String productImage;
     private String categoryName;
     private String description;
+    private boolean isActive;
 
     public Product() {}
 
@@ -93,5 +94,13 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }
