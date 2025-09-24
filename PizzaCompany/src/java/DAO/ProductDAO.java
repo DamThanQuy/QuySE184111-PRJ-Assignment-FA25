@@ -41,7 +41,11 @@ public class ProductDAO {
     }
 
     public static Product getProductByID(int id) throws Exception {
-        String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID WHERE p.ProductID = ?";
+        String sql = "SELECT p.*, c.CategoryName, s.CompanyName as SupplierName " +
+                "FROM Products p " +
+                "JOIN Categories c ON p.CategoryID = c.CategoryID " +
+                "JOIN Suppliers s ON p.SupplierID = s.SupplierID " +
+                "WHERE p.ProductID = ?";
         try (Connection conn = DbUtils.getConnection();
              PreparedStatement st = conn.prepareStatement(sql)) {
             st.setInt(1, id);
@@ -61,6 +65,9 @@ public class ProductDAO {
                         p.setCategoryName(rs.getString("CategoryName"));
                     } catch (Exception ignore) {}
                     try {
+                        p.setSupplierName(rs.getString("SupplierName"));
+                    } catch (Exception ignore) {}
+                    try {
                         p.setDescription(rs.getString("Description"));
                     } catch (Exception ignore) {}
                     return p;
@@ -70,26 +77,28 @@ public class ProductDAO {
         return null;
     }
 
-    public static List<Product> searchProducts(String keyword, Double minPrice, Double maxPrice) throws Exception {
+    public static List<Product> searchProducts(String keyword, Double minPrice, Double maxPrice, Integer categoryID) throws Exception {
         List<Product> list = new ArrayList<>();
         String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID WHERE 1=1";
         List<Object> params = new ArrayList<>();
-        //nếu keyword không null và không rỗng thì thêm vào câu truy vấn
+
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql += " AND ProductName LIKE ?";
+            sql += " AND p.ProductName LIKE ?";
             params.add("%" + keyword.trim() + "%");
         }
-        //nếu minPrice không null thì thêm vào câu truy vấn
         if (minPrice != null) {
-            sql += " AND UnitPrice >= ?";
+            sql += " AND p.UnitPrice >= ?";
             params.add(minPrice);
         }
-        //nếu maxPrice không null thì thêm vào câu truy vấn
         if (maxPrice != null) {
-            sql += " AND UnitPrice <= ?";
+            sql += " AND p.UnitPrice <= ?";
             params.add(maxPrice);
         }
-        //thực hiện truy vấn
+        if (categoryID != null) {
+            sql += " AND p.CategoryID = ?";
+            params.add(categoryID);
+        }
+
         try (Connection conn = DbUtils.getConnection();
              PreparedStatement st = conn.prepareStatement(sql)) {
             for (int i = 0; i < params.size(); i++) {
@@ -115,11 +124,13 @@ public class ProductDAO {
                     } catch (Exception ignore) {}
                     list.add(p);
                 }
+            }
         }
         return list;
     }
-}
-    public static int createProduct(String productName, Double unitPrice, int categoryID, String quantityPerUnit, String productImage, int supplierID) throws Exception {
+
+
+    public static int insertProduct(String productName, Double unitPrice, int categoryID, String quantityPerUnit, String productImage, int supplierID, boolean isActive) throws Exception {
         String sql = "INSERT INTO Products (ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, ProductImage, isActive) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DbUtils.getConnection();
@@ -130,8 +141,8 @@ public class ProductDAO {
             st.setString(4, quantityPerUnit);
             st.setDouble(5, unitPrice);
             st.setString(6, productImage);
-            st.setBoolean(7, true); // isActive = true
-            return st.executeUpdate(); // Trả về số hàng affected
+            st.setBoolean(7, isActive);
+            return st.executeUpdate(); // Trả về số hàng inserted
         }
     }
 
@@ -149,6 +160,15 @@ public class ProductDAO {
             st.setBoolean(7, isActive);
             st.setInt(8, productID);
             return st.executeUpdate(); // Trả về số hàng affected
+        }
+    }
+
+    public static int deleteProduct(int productID) throws Exception {
+        String sql = "UPDATE Products SET isActive = 0 WHERE ProductID = ?";
+        try (Connection conn = DbUtils.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setInt(1, productID);
+            return st.executeUpdate(); // số hàng được cập nhật (set isActive = 0)
         }
     }
 

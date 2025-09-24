@@ -14,6 +14,7 @@
     <body>
         <jsp:include page="fragments/navbar.jsp" />
         <h1>Manage Products</h1>
+        <a href="createProduct">Create New Pizza</a>
         <table>
             <thead>
                 <tr>
@@ -34,8 +35,12 @@
                         <td>${p.categoryName}</td>
                         <td>${p.isActive ? 'Yes' : 'No'}</td>
                         <td>
-                            <a href="editProduct?id=${p.productID}">Edit</a> |
-                            <a href="deleteProduct?id=${p.productID}">Delete</a>
+                            <!-- Khi nhấn View sẽ tới /detailProduct?id=... (DetailProductController) để xem chi tiết, Edit sẽ tới /editProduct?id=... để chỉnh sửa -->                           
+                            <a href="detailProduct?id=${p.productID}">View</a> | <a href="editProduct?id=${p.productID}">Edit</a> |
+                            <form action="deleteProduct" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa pizza này?');">
+                                <input type="hidden" name="id" value="${p.productID}" />
+                                <button type="submit" style="background:none;border:none;color:#007bff;cursor:pointer;padding:0;">Delete</button>
+                            </form>
                         </td>
                     </tr>
                 </c:forEach>

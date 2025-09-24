@@ -4,8 +4,10 @@
     margin:0;
     padding:0;
     background:#333;
-    overflow:hidden;
+    overflow:visible;
 }
+.navbar ul::after{ content:""; display: table; clear: both; }
+.navbar{ position: relative; }
 .navbar li{
     float:left;
 }
@@ -21,3 +23,22 @@
 .navbar a:hover{
     background:#111;
 }
+.navbar .dropdown { position: relative; }
+.navbar .dropdown > a { position: relative; padding-right: 16px; }
+.navbar .dropdown > a::after {
+  content: "▾";
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #fff;
+}
+.navbar .dropdown-menu {
+  top: 100%;
+  left: 0;
+  border: 1px solid #222;
+}
+.navbar .dropdown-menu a { padding: 10px 14px; }
+.navbar .dropdown-menu a:hover { background: #222; }
+.caret { margin-left: 6px; font-size: 12px; color: #fff; }
