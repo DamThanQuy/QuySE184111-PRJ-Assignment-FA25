@@ -1,6 +1,7 @@
 package Controllers;
 
 import DAO.ProductDAO;
+import DAO.CategoryDAO;
 import Models.Product;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,14 +34,7 @@ public class HomeController extends HttpServlet {
         }
     } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
@@ -52,13 +46,24 @@ public class HomeController extends HttpServlet {
             Double minPrice = (minPriceStr != null && !minPriceStr.trim().isEmpty()) ? Double.parseDouble(minPriceStr.trim()) : null;
             Double maxPrice = (maxPriceStr != null && !maxPriceStr.trim().isEmpty()) ? Double.parseDouble(maxPriceStr.trim()) : null;
             
+            String categoryStr = request.getParameter("category");
+            Integer categoryID = null;
+            if (categoryStr != null && !categoryStr.trim().isEmpty()) {
+                try { categoryID = Integer.parseInt(categoryStr.trim()); } catch (NumberFormatException ignore) {}
+            }
+            
             List<Product> products;
-            if ((keyword != null && !keyword.trim().isEmpty()) || minPrice != null || maxPrice != null) {
-                products = ProductDAO.searchProducts(keyword, minPrice, maxPrice);
+            boolean hasSearch = (keyword != null && !keyword.trim().isEmpty()) || minPrice != null || maxPrice != null || categoryID != null;
+
+            if (hasSearch) {
+                products = ProductDAO.searchProducts(keyword, minPrice, maxPrice, categoryID);
             } else {
                 products = ProductDAO.getAllProducts();
             }
           
+            // nạp categories cho navbar
+            request.setAttribute("categoriesMenu", CategoryDAO.getAllCategories());
+
             request.setAttribute("products", products);
             request.getRequestDispatcher("home.jsp").forward(request, response);
         } catch (Exception e) {
