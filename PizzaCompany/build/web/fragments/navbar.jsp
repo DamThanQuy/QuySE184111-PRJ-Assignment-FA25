@@ -32,11 +32,12 @@
         <c:forEach var="cat" items="${requestScope.categoriesMenu}">
             <li>
                 <a href="HomeController?category=${cat.categoryID}">${cat.categoryName}</a>
+                <!-- dieu huong toi trang homeController với tham số category = ${cat.categoryID} -->
             </li>
         </c:forEach>
     </ul>
 </li>
-        <li><a href="reviews.jsp">Reviews</a></li>
+        
 
         <!-- Bo sung cho Normal User -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 2}">
@@ -44,9 +45,15 @@
         </c:if>
 
         <!-- Bo sung cho Admin -->
+        <!-- hien thi dashboard -->
+        <c:if test="${sessionScope.account != null && sessionScope.account.type == 1}">
+            <li><a href="AdminController">Dashboard</a></li>
+        </c:if>
+        <!-- hien thi ten user -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 1}">
             <li style="color:#fff; padding:14px 20px;">Welcome, ${sessionScope.account.userName}</li>
         </c:if>
+       
 
         <!-- Khu vuc nut hanh dong ben phai -->
         <c:choose>
