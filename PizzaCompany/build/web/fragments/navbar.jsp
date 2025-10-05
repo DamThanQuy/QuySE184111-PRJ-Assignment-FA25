@@ -41,7 +41,12 @@
 
         <!-- Bo sung cho Normal User -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 2}">
-            <li><a href="orders-history.jsp">Orders history</a></li>
+            <li><a href="cart"> Cart 
+                <c:if test="${sessionScope.cart != null && !sessionScope.cart.items.isEmpty()}">
+                    (${sessionScope.cart.items.size()})
+                </c:if>
+            </a></li>
+            <li><a href="orders-history">Orders history</a></li>
         </c:if>
 
         <!-- Bo sung cho Admin -->

@@ -12,7 +12,9 @@
             .products{display:flex;flex-wrap:wrap;gap:20px;}
             .card{border:1px solid #ddd;padding:10px;width:200px;text-align:center;}
             .card img{width:100%;height:120px;object-fit:cover;}
-            .card button{margin-top:10px;padding:6px 10px;background:#777;color:#fff;border:none;cursor:not-allowed;}
+            .card button{margin-top:10px;padding:8px 16px;background:#007bff;color:#fff;border:none;cursor:pointer;border-radius:4px;font-size:14px;}
+            .card button:hover{background:#0056b3;}
+            .card button:disabled{background:#6c757d;cursor:not-allowed;}
         </style>
     </head>
     <body>
@@ -44,10 +46,16 @@
                         <p><em>${p.categoryName}</em></p>
                         <p>${p.description}</p>
                         <c:if test="${sessionScope.account != null}">
-                            <button>Add to Cart</button>
+                            <!-- Add to Cart Form -->
+                            <form method="POST" action="cart" style="margin-top:10px;">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="productID" value="${p.productID}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit">Add to Cart</button>
+                            </form>
                         </c:if>
                         <c:if test="${sessionScope.account == null}">
-                            <button disabled>Login to Buy</button>
+                            <button disabled>Login to buy</button>
                         </c:if>
                     </div>
                 </c:forEach>
