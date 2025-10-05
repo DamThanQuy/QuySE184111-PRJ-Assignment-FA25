@@ -4,25 +4,61 @@
  */
 package Controllers;
 
+import DAO.OrderDAO;
+import Models.Order;
+import Models.Account;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.annotation.WebServlet;
 
 /**
  *
  * @author QUYDAM
  */
-public class DetailProductController extends HttpServlet {
+@WebServlet("/orders-history")
+public class OrderHistoryController extends HttpServlet {
 
-  
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try ( PrintWriter out = response.getWriter()) {
-          
+        
+        HttpSession session = request.getSession();
+        Account account = (Account) session.getAttribute("account");
+        
+        try {
+            if (account == null) {
+                // Nếu chưa đăng nhập, set error và forward đến JSP
+                request.setAttribute("error", "Vui lòng đăng nhập để xem lịch sử đặt hàng.");
+                request.getRequestDispatcher("orders-history.jsp").forward(request, response);
+                return;
+            }
+            
+            // Lấy danh sách đơn hàng của người dùng
+            OrderDAO orderDAO = new OrderDAO();
+            List<Order> orders = orderDAO.getOrdersByCustomerId(account.getAccountID());
+            
+            // Truyền dữ liệu vào request
+            request.setAttribute("orders", orders);
+            request.getRequestDispatcher("orders-history.jsp").forward(request, response);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("error", "Có lỗi xảy ra khi tải lịch sử đặt hàng: " + e.getMessage());
+            request.getRequestDispatcher("orders-history.jsp").forward(request, response);
         }
     }
 
@@ -62,7 +98,7 @@ public class DetailProductController extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Controller for displaying user's order history";
     }// </editor-fold>
 
 }

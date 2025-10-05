@@ -7,19 +7,15 @@ public class Order {
     private int customerID;
     private LocalDateTime orderDate;
     private LocalDateTime requiredDate;
-    private LocalDateTime shippedDate;
-    private double freight;
     private String shipAddress;
 
     public Order() {}
 
-    public Order(int orderID, int customerID, LocalDateTime orderDate, LocalDateTime requiredDate, LocalDateTime shippedDate, double freight, String shipAddress) {
+    public Order(int orderID, int customerID, LocalDateTime orderDate, LocalDateTime requiredDate, String shipAddress) {
         this.orderID = orderID;
         this.customerID = customerID;
         this.orderDate = orderDate;
         this.requiredDate = requiredDate;
-        this.shippedDate = shippedDate;
-        this.freight = freight;
         this.shipAddress = shipAddress;
     }
 
@@ -55,21 +51,6 @@ public class Order {
         this.requiredDate = requiredDate;
     }
 
-    public LocalDateTime getShippedDate() {
-        return shippedDate;
-    }
-
-    public void setShippedDate(LocalDateTime shippedDate) {
-        this.shippedDate = shippedDate;
-    }
-
-    public double getFreight() {
-        return freight;
-    }
-
-    public void setFreight(double freight) {
-        this.freight = freight;
-    }
 
     public String getShipAddress() {
         return shipAddress;
