@@ -24,15 +24,19 @@ public class OrderDAO {
     
     // Tạo đơn hàng mới và trả về OrderID
     public int createOrder(Order order) throws SQLException, ClassNotFoundException {
-        String sql = "INSERT INTO Orders (CustomerID, OrderDate, RequiredDate, ShipAddress) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Orders (CustomerID, OrderDate, ShipAddress, PhoneNumber) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = DbUtils.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             ps.setInt(1, order.getCustomerID());
-            ps.setTimestamp(2, Timestamp.valueOf(order.getOrderDate()));
-            ps.setTimestamp(3, Timestamp.valueOf(order.getRequiredDate()));
-            ps.setString(4, order.getShipAddress());
+            if (order.getOrderDate() != null) {
+                ps.setTimestamp(2, Timestamp.valueOf(order.getOrderDate()));
+            } else {
+                ps.setNull(2, java.sql.Types.TIMESTAMP);
+            }
+            ps.setString(3, order.getShipAddress());
+            ps.setString(4, order.getPhoneNumber());
             
             int affectedRows = ps.executeUpdate();
             
@@ -95,9 +99,12 @@ public class OrderDAO {
                     Order order = new Order();
                     order.setOrderID(rs.getInt("OrderID"));
                     order.setCustomerID(rs.getInt("CustomerID"));
-                    order.setOrderDate(rs.getTimestamp("OrderDate").toLocalDateTime());
-                    order.setRequiredDate(rs.getTimestamp("RequiredDate").toLocalDateTime());
+                    Timestamp orderDateTs = rs.getTimestamp("OrderDate");
+                    if (orderDateTs != null) {
+                        order.setOrderDate(orderDateTs.toLocalDateTime());
+                    }
                     order.setShipAddress(rs.getString("ShipAddress"));
+                    order.setPhoneNumber(rs.getString("PhoneNumber"));
                     return order;
                 }
             }
@@ -121,9 +128,12 @@ public class OrderDAO {
                     Order order = new Order();
                     order.setOrderID(rs.getInt("OrderID"));
                     order.setCustomerID(rs.getInt("CustomerID"));
-                    order.setOrderDate(rs.getTimestamp("OrderDate").toLocalDateTime());
-                    order.setRequiredDate(rs.getTimestamp("RequiredDate").toLocalDateTime());
+                    Timestamp orderDateTs = rs.getTimestamp("OrderDate");
+                    if (orderDateTs != null) {
+                        order.setOrderDate(orderDateTs.toLocalDateTime());
+                    }
                     order.setShipAddress(rs.getString("ShipAddress"));
+                    order.setPhoneNumber(rs.getString("PhoneNumber"));
                     orders.add(order);
                 }
             }
@@ -163,5 +173,28 @@ public class OrderDAO {
                 conn.close();
             }
         }
+    }
+    // Tính tổng tiền cho một đơn hàng từ OrderDetails
+    public double getTotalAmountByOrderId(int orderID) throws SQLException, ClassNotFoundException {
+        String sql = "SELECT SUM(UnitPrice * Quantity) as TotalAmount FROM OrderDetails WHERE OrderID = ?";
+        
+        try (Connection conn = DbUtils.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setInt(1, orderID);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("TotalAmount");
+                }
+            }
+        }
+        return 0.0;
+    }
+    
+    // Lấy chi tiết đơn hàng theo OrderID
+    public List<OrderDetail> getOrderDetailsByOrderId(int orderID) throws SQLException, ClassNotFoundException {
+        OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+        return orderDetailDAO.getOrderDetailsByOrderId(orderID);
     }
 }

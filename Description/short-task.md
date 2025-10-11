@@ -1,29 +1,45 @@
-# Chức năng lịch sử đặt hàng
+# Short Task 3 - PRJ-Assignment-FA25
 
-## Các bước để triển khai chức năng lịch sử đặt hàng
+## ⚠️ BUG: Sản phẩm isActive=0 vẫn hiển thị trên Home Page
 
-### 1. Tạo trang JSP orders-history.jsp
-- [x] Tạo file `orders-history.jsp` trong thư mục `web/`.
-- [ ] Thiết kế giao diện hiển thị danh sách đơn hàng của người dùng (từ session).
-- [ ] Hiển thị thông tin cơ bản: OrderID, OrderDate, TotalAmount, ShipAddress.
-- [ ] Thêm liên kết xem chi tiết đơn hàng hoặc quay lại trang chủ.
+### 🔍 Nguyên nhân:
+**ProductDAO.getAllProducts() không filter theo isActive**
 
-### 2. Cập nhật Controller để xử lý trang lịch sử
-- [x] Cập nhật `HomeController.java` hoặc tạo Controller mới để xử lý URL `/orders-history`.
-- [x] Lấy `Account` từ session để xác định người dùng.
-- [x] Sử dụng `OrderDAO` để lấy danh sách đơn hàng theo `CustomerID`.
-- [x] Truyền dữ liệu vào JSP và forward đến `orders-history.jsp`.
+```java
+// Dòng 16 - ProductDAO.java
+String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID";
+```
 
-### 3. Tích hợp dữ liệu từ DAO
-- [ ] Trong Controller, gọi `OrderDAO.getOrdersByCustomerId(account.getAccountID())` để lấy danh sách đơn hàng.
-- [ ] Nếu cần, lấy chi tiết đơn hàng bằng `OrderDetailDAO.getOrderDetailsByOrderId(orderID)`.
-- [ ] Tính tổng tiền nếu chưa có trong model.
+Query này lấy **TẤT CẢ** sản phẩm, không kiểm tra `isActive = 1`
 
-### 4. Xử lý trường hợp chưa đăng nhập
-- [ ] Kiểm tra session: Nếu chưa đăng nhập, chuyển hướng đến trang login.
-- [ ] Hiển thị thông báo nếu không có đơn hàng nào.
+**Kết quả:** Sản phẩm "New Pizza 1" (ProductID=7, isActive=0) vẫn hiển thị cho khách hàng ở home page
 
-### 5. Test chức năng
-- [ ] Test hiển thị lịch sử đơn hàng khi đăng nhập.
-- [ ] Test liên kết từ navbar đến trang lịch sử.
-- [ ] Đảm bảo dữ liệu chính xác và không lỗi bảo mật.
+### ✅ Task Fix:
+
+**File cần sửa:** `DAO/ProductDAO.java`
+
+**Dòng 16 - Thêm WHERE clause:**
+```java
+// Cũ:
+String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID";
+
+// Mới:
+String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID WHERE p.isActive = 1";
+```
+
+**Lý do:** Chỉ hiển thị sản phẩm đang active cho khách hàng. Sản phẩm bị vô hiệu hóa không được phép mua.
+
+---
+
+## Function 07: Báo cáo thống kê doanh số theo khoảng thời gian (Admin)
+
+### ✅ Status: HOÀN THÀNH
+
+**Đã implement:**
+- ✅ Model: `SalesReport.java`
+- ✅ DAO: `SalesReportDAO.java` (query với JOIN, GROUP BY, ORDER BY DESC)
+- ✅ Controller: `SalesReportController.java` (validation, phân quyền Admin)
+- ✅ View: `sales-report.jsp` (form, table, alerts, CSS)
+- ✅ Navigation: Link "Sales Report" trong navbar cho Admin
+- ✅ Tested: Chức năng hoạt động đúng, sắp xếp giảm dần
+

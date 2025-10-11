@@ -13,7 +13,7 @@ public class ProductDAO {
 
     public static List<Product> getAllProducts() throws Exception {
         List<Product> list = new ArrayList<>();
-        String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID";
+        String sql = "SELECT p.*, c.CategoryName FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID WHERE p.isActive = 1";
         try (Connection conn = DbUtils.getConnection();
              PreparedStatement st = conn.prepareStatement(sql);
              ResultSet rs = st.executeQuery()) {

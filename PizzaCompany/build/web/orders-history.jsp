@@ -9,11 +9,13 @@
 <%@page import="Models.OrderDetail" %>
 <%@page import="Models.Account" %>
 <%@page import="java.util.List" %>
+<%@page import="java.util.Map" %>
 <%@page import="java.time.format.DateTimeFormatter" %>
 
 <%
     Account account = (Account) session.getAttribute("account");
     List<Order> orders = (List<Order>) request.getAttribute("orders");
+    Map<Integer, Double> totalAmounts = (Map<Integer, Double>) request.getAttribute("totalAmounts");
     String error = (String) request.getAttribute("error");
 %>
 
@@ -61,6 +63,7 @@
                                     <th>Ngày đặt hàng</th>
                                     <th>Tổng tiền</th>
                                     <th>Địa chỉ giao hàng</th>
+                                    <th>Số điện thoại</th>
                                     <th>Hành động</th>
                                 </tr>
                             </thead>
@@ -69,9 +72,10 @@
                                     <tr>
                                         <td>#<%= order.getOrderID() %></td>
                                         <td><%= order.getOrderDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) %></td>
-                                        <td>$<%= String.format("%.2f", 0.0) %></td> <!-- Tính tổng tiền từ OrderDetails nếu cần -->
+                                        <td>$<%= String.format("%.2f", totalAmounts.getOrDefault(order.getOrderID(), 0.0)) %></td>
                                         <td><%= order.getShipAddress() %></td>
-                                        <td><a href="#" class="btn">Xem chi tiết</a></td> <!-- Liên kết chi tiết nếu có -->
+                                        <td><%= order.getPhoneNumber() != null ? order.getPhoneNumber() : "N/A" %></td>
+                                        <td><a href="order-detail?orderId=<%= order.getOrderID() %>" class="btn">Xem chi tiết</a></td>
                                     </tr>
                                 <% } %>
                             </tbody>
