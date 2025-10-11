@@ -38,6 +38,7 @@ public class CheckoutController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         
         String action = request.getParameter("action");
         
@@ -81,6 +82,10 @@ public class CheckoutController extends HttpServlet {
         
         if (cart == null || cart.getItems().isEmpty()) {
             request.setAttribute("message", "Your cart is empty. Please add some items before checkout.");
+            request.setAttribute("cart", cart);
+            request.setAttribute("totalAmount", 0.0);
+            request.setAttribute("isEmpty", true);
+            request.setAttribute("totalItems", 0);
             request.getRequestDispatcher("cart.jsp").forward(request, response);
             return;
         }
@@ -105,6 +110,10 @@ public class CheckoutController extends HttpServlet {
         // Kiểm tra giỏ hàng
         if (cart == null || cart.getItems().isEmpty()) {
             request.setAttribute("error", "Your cart is empty.");
+            request.setAttribute("cart", cart);
+            request.setAttribute("totalAmount", 0.0);
+            request.setAttribute("isEmpty", true);
+            request.setAttribute("totalItems", 0);
             request.getRequestDispatcher("cart.jsp").forward(request, response);
             return;
         }
@@ -112,13 +121,26 @@ public class CheckoutController extends HttpServlet {
         try {
             // Lấy thông tin từ form
             String shipAddress = request.getParameter("shipAddress");
+            String phoneNumber = request.getParameter("phoneNumber");
             
             // Lấy account từ session
             Account account = (Account) session.getAttribute("account");
             
             // Validation
             if (shipAddress == null || shipAddress.trim().isEmpty()) {
-                request.setAttribute("error", "Please enter shipping address.");
+                double totalAmount = cart != null ? cart.getTotalAmount() : 0.0;
+                request.setAttribute("cart", cart);
+                request.setAttribute("totalAmount", totalAmount);
+                request.setAttribute("error", "Vui lòng nhập địa chỉ giao hàng.");
+                request.getRequestDispatcher("checkout.jsp").forward(request, response);
+                return;
+            }
+            
+            if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+                double totalAmount = cart != null ? cart.getTotalAmount() : 0.0;
+                request.setAttribute("cart", cart);
+                request.setAttribute("totalAmount", totalAmount);
+                request.setAttribute("error", "Vui lòng nhập số điện thoại.");
                 request.getRequestDispatcher("checkout.jsp").forward(request, response);
                 return;
             }
@@ -136,8 +158,8 @@ public class CheckoutController extends HttpServlet {
             Order order = new Order();
             order.setCustomerID(customerID); // Sử dụng accountID
             order.setOrderDate(LocalDateTime.now());
-            order.setRequiredDate(LocalDateTime.now().plusDays(3)); // Giao trong 3 ngày
             order.setShipAddress(shipAddress.trim());
+            order.setPhoneNumber(phoneNumber.trim());
             
             // Tạo OrderDetails từ Cart
             List<OrderDetail> orderDetails = new ArrayList<>();

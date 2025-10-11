@@ -69,8 +69,10 @@
             <div class="cart-content">
                 <%
                     Cart cart = (Cart) request.getAttribute("cart");
-                    boolean isEmpty = (Boolean) request.getAttribute("isEmpty");
-                    int totalItems = (Integer) request.getAttribute("totalItems");
+                    Object isEmptyObj = request.getAttribute("isEmpty");
+                    boolean isEmpty = (isEmptyObj instanceof Boolean) ? (Boolean) isEmptyObj : true;
+                    Object totalItemsObj = request.getAttribute("totalItems");
+                    int totalItems = (totalItemsObj instanceof Integer) ? (Integer) totalItemsObj : 0;
                     
                     if (isEmpty) {
                 %>

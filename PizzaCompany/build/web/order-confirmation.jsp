@@ -44,8 +44,8 @@
                     <h2>Order Information</h2>
                     <p><strong>Order ID:</strong> #<%= order.getOrderID() %></p>
                     <p><strong>Order Date:</strong> <%= order.getOrderDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) %></p>
-                    <p><strong>Required Date:</strong> <%= order.getRequiredDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) %></p>
                     <p><strong>Ship Address:</strong> <%= order.getShipAddress() %></p>
+                    <p><strong>Số điện thoại:</strong> <%= order.getPhoneNumber() %></p>
                 </div>
                 
                 <% if (orderDetails != null && !orderDetails.isEmpty()) { %>

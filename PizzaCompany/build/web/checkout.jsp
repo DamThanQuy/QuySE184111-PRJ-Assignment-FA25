@@ -11,7 +11,8 @@
 
 <%
     Cart cart = (Cart) request.getAttribute("cart");
-    double totalAmount = (Double) request.getAttribute("totalAmount");
+    Object totalAmountObj = request.getAttribute("totalAmount");
+    double totalAmount = totalAmountObj != null ? (Double) totalAmountObj : 0.0;
     String error = (String) request.getAttribute("error");
 %>
 
@@ -83,9 +84,16 @@
                         <textarea id="shipAddress" name="shipAddress" rows="3" required placeholder="Nhập địa chỉ giao hàng chi tiết"></textarea>
                     </div>
                     
+                    <div class="form-group">
+                        <label for="phoneNumber">Số điện thoại *</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" 
+                               required placeholder="Nhập số điện thoại liên hệ"
+                               pattern="[0-9]{10,11}">
+                    </div>
+                    
                     <div style="margin-top: 30px;">
                         <a href="cart" class="btn-secondary">Quay lại giỏ hàng</a>
-                        <button type="submit" class="btn">🛒 Đặt hàng</button>
+                        <button type="submit" class="btn">Đặt hàng</button>
                     </div>
                 </form>
             </div>

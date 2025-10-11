@@ -46,13 +46,14 @@
                     (${sessionScope.cart.items.size()})
                 </c:if>
             </a></li>
-            <li><a href="orders-history">Orders history</a></li>
+            <li><a href="OrderHistoryController">Orders history</a></li>
         </c:if>
 
         <!-- Bo sung cho Admin -->
         <!-- hien thi dashboard -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 1}">
             <li><a href="AdminController">Dashboard</a></li>
+            <li><a href="SalesReportController">Sales Report</a></li>
         </c:if>
         <!-- hien thi ten user -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 1}">

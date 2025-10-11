@@ -44,6 +44,14 @@
         <servlet-name>OrderHistoryController</servlet-name>
         <servlet-class>Controllers.OrderHistoryController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>OrderDetailController</servlet-name>
+        <servlet-class>Controllers.OrderDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SalesReportController</servlet-name>
+        <servlet-class>Controllers.SalesReportController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -91,6 +99,14 @@
     <servlet-mapping>
         <servlet-name>OrderHistoryController</servlet-name>
         <url-pattern>/OrderHistoryController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>OrderDetailController</servlet-name>
+        <url-pattern>/OrderDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SalesReportController</servlet-name>
+        <url-pattern>/SalesReportController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

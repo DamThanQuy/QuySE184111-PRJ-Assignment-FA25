@@ -9,12 +9,14 @@ import Models.Order;
 import Models.Account;
 import java.io.IOException;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.annotation.WebServlet;
 
 /**
  *
@@ -51,8 +53,16 @@ public class OrderHistoryController extends HttpServlet {
             OrderDAO orderDAO = new OrderDAO();
             List<Order> orders = orderDAO.getOrdersByCustomerId(account.getAccountID());
             
+            // Tính tổng tiền cho mỗi đơn hàng
+            Map<Integer, Double> totalAmounts = new HashMap<>();
+            for (Order order : orders) {
+                double total = orderDAO.getTotalAmountByOrderId(order.getOrderID());
+                totalAmounts.put(order.getOrderID(), total);
+            }
+            
             // Truyền dữ liệu vào request
             request.setAttribute("orders", orders);
+            request.setAttribute("totalAmounts", totalAmounts);
             request.getRequestDispatcher("orders-history.jsp").forward(request, response);
             
         } catch (Exception e) {
