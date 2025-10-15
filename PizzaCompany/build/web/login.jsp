@@ -13,6 +13,7 @@
     </head>
     <body>
         <h1>Please Login Here.</h1>
+        <p><a href="HomeController">← Back to Home</a></p>
         <form action="LoginController" method="post">
             <label for="username">Username:</label><br>
             <input type="text" id="username" name="username" required><br><br>
@@ -21,5 +22,6 @@
             <input type="submit" value="Login">
         </form>
         <h4 style="color:red;">${requestScope.error}</h4>
+        <p>Chưa có tài khoản? <a href="register">Đăng ký ngay</a></p>
     </body>
 </html>

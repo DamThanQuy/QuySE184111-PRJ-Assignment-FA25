@@ -52,6 +52,10 @@
         <servlet-name>SalesReportController</servlet-name>
         <servlet-class>Controllers.SalesReportController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RegisterController</servlet-name>
+        <servlet-class>Controllers.RegisterController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginController</servlet-name>
         <url-pattern>/LoginController</url-pattern>
@@ -107,6 +111,10 @@
     <servlet-mapping>
         <servlet-name>SalesReportController</servlet-name>
         <url-pattern>/SalesReportController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/RegisterController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
