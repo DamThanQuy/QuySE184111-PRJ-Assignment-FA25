@@ -64,7 +64,7 @@
         <!-- Khu vuc nut hanh dong ben phai -->
         <c:choose>
             <c:when test="${sessionScope.account == null}">
-                <li class="right"><a href="register.jsp">Register</a></li>
+                <li class="right"><a href="register">Register</a></li>
                 <li class="right"><a href="login.jsp">Log In</a></li>
             </c:when>
             <c:otherwise>

@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author QUYDAM
  */
+@WebServlet("/admin")
 public class AdminController extends HttpServlet {
 
     /**
@@ -50,7 +52,7 @@ public class AdminController extends HttpServlet {
         }
 
         try {
-            List<Product> products = ProductDAO.getAllProducts();
+            List<Product> products = ProductDAO.getAllProductsForAdmin();
             request.setAttribute("products", products);
             request.getRequestDispatcher("manageProducts.jsp").forward(request, response);
         } catch (Exception e) {

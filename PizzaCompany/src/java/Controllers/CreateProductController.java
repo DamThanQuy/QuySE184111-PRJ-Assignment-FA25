@@ -8,7 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import DAO.ProductDAO;
+import DAO.CategoryDAO;
+import DAO.SupplierDAO; // Thêm import
 import Models.Product;
+import Models.Category;
+import Models.Supplier; // Thêm import
+import java.util.List;
 
 
 @WebServlet("/createProduct")
@@ -18,6 +23,17 @@ public class CreateProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        try {
+            // Lấy danh sách category để hiển thị trong dropdown
+            List<Category> categories = CategoryDAO.getAllCategories();
+            request.setAttribute("categories", categories);
+            
+            // Lấy danh sách supplier để hiển thị trong dropdown
+            List<Supplier> suppliers = SupplierDAO.getAllSuppliers();
+            request.setAttribute("suppliers", suppliers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         request.getRequestDispatcher("createProduct.jsp").forward(request, response);
     }
 
@@ -85,6 +101,16 @@ public class CreateProductController extends HttpServlet {
             request.setAttribute("productImage", productImage);
             request.setAttribute("supplierID", supplierIDStr);
             request.setAttribute("isActive", isActiveStr);
+            
+            // Truyền lại danh sách category và supplier
+            try {
+                List<Category> categories = CategoryDAO.getAllCategories();
+                request.setAttribute("categories", categories);
+                List<Supplier> suppliers = SupplierDAO.getAllSuppliers();
+                request.setAttribute("suppliers", suppliers);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             request.getRequestDispatcher("createProduct.jsp").forward(request, response);
             return;
