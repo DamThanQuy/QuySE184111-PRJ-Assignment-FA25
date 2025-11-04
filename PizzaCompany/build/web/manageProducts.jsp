@@ -14,7 +14,9 @@
     <body>
         <jsp:include page="fragments/navbar.jsp" />
         <h1>Manage Products</h1>
-        <a href="createProduct">Create New Pizza</a>
+        <form action="createProduct" method="get" style="display:inline;">
+    <button type="submit" class="back-btn">Create New Pizza</button>
+</form>
         <table>
             <thead>
                 <tr>
@@ -35,11 +37,18 @@
                         <td>${p.categoryName}</td>
                         <td>${p.isActive ? 'Yes' : 'No'}</td>
                         <td>
-                            <!-- Khi nhấn View sẽ tới /detailProduct?id=... (DetailProductController) để xem chi tiết, Edit sẽ tới /editProduct?id=... để chỉnh sửa -->                           
-                            <a href="detailProduct?id=${p.productID}">View</a> | <a href="editProduct?id=${p.productID}">Edit</a> |
+                            <!-- Khi nhấn View sẽ tới /detailProduct?id=... (DetailProductController) để xem chi tiết, Edit sẽ tới /editProduct?id=... để chỉnh sửa -->
+                            <form action="detailProduct" method="get" style="display:inline;">
+                                <input type="hidden" name="id" value="${p.productID}" />
+                                <button type="submit" ">View</button>
+                            </form>
+                            <form action="editProduct" method="get" style="display:inline;">
+                                <input type="hidden" name="id" value="${p.productID}" />
+                                <button type="submit" ">Edit</button>
+                            </form>
                             <form action="deleteProduct" method="post" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa pizza này?');">
                                 <input type="hidden" name="id" value="${p.productID}" />
-                                <button type="submit" style="background:none;border:none;color:#007bff;cursor:pointer;padding:0;">Delete</button>
+                                <button type="submit" ">Delete</button>
                             </form>
                         </td>
                     </tr>

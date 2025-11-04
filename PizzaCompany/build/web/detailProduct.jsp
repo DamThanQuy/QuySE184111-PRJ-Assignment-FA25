@@ -1,5 +1,3 @@
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -44,7 +42,9 @@
                     </div>
                 </c:if>
                 
-                <a href="AdminController" class="back-btn">← Back to Product List</a>
+                <form action="admin" method="get" style="display:inline;">
+                <button type="submit" class="back-btn" ">← Back to Product List</button>
+</form>
             </div>
         </c:if>
         
@@ -52,7 +52,9 @@
             <div>
                 <h2>Product not found!</h2>
                 <p>The product you are looking for does not exist or has been removed.</p>
-                <a href="manageProducts" class="back-btn">← Back to Product List</a>
+                <form action="admin" method="get" style="display:inline;">
+                        <button type="submit" class="back-btn" ">← Back to Product List</button>
+                </form>
             </div>
         </c:if>
     </body>

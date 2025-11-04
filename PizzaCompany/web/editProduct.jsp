@@ -71,6 +71,8 @@
         <c:if test="${empty requestScope.product}">
             <p>Product not found.</p>
         </c:if>
-        <a href="AdminController">Back to Manage Products</a>
+        <form action="admin" method="get" style="display:inline;">
+    <button type="submit" class="back-btn" >Back to Manage Products</button>
+</form>
     </body>
 </html>
