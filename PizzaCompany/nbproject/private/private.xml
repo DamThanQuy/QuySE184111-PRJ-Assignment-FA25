@@ -2,6 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/web/home.jsp</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Models/Cart.java</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Controllers/LoginController.java</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/web/sales-report.jsp</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/web/login.jsp</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Controllers/CartController.java</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/Controllers/SalesReportController.java</file>
+            <file>file:/D:/STUDY/KY4/PRJ-3/QuySE184111-PRJ-Assignment-FA25/PizzaCompany/src/java/DAO/SalesReportDAO.java</file>
+        </group>
     </open-files>
 </project-private>

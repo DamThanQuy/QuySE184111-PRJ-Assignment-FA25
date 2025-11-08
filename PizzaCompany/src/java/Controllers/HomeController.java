@@ -30,22 +30,25 @@ public class HomeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         try {
+            //Lấy tham số tìm kiếm từ request
             String keyword = request.getParameter("keyword");
             String minPriceStr = request.getParameter("minPrice");
             String maxPriceStr = request.getParameter("maxPrice");
-            
+            // Chuyển đổi chuỗi giá trị từ request sang Integer
             Double minPrice = (minPriceStr != null && !minPriceStr.trim().isEmpty()) ? Double.parseDouble(minPriceStr.trim()) : null;
             Double maxPrice = (maxPriceStr != null && !maxPriceStr.trim().isEmpty()) ? Double.parseDouble(maxPriceStr.trim()) : null;
-            
+            // Lấy tham số categoryID từ navbar nếu user ko search
             String categoryStr = request.getParameter("category");
             Integer categoryID = null;
             if (categoryStr != null && !categoryStr.trim().isEmpty()) {
-                try { categoryID = Integer.parseInt(categoryStr.trim()); } catch (NumberFormatException ignore) {}
+                try { categoryID = Integer.parseInt(categoryStr.trim()); } 
+                catch (NumberFormatException ignore) {}
             }
             
             List<Product> products;
+            // Xác định có tìm kiếm hay không
             boolean hasSearch = (keyword != null && !keyword.trim().isEmpty()) || minPrice != null || maxPrice != null || categoryID != null;
-
+            // Gọi ProductDAO để lấy danh sách sản phẩm
             if (hasSearch) {
                 products = ProductDAO.searchProducts(keyword, minPrice, maxPrice, categoryID);
             } else {

@@ -41,6 +41,14 @@
 
         <!-- Bo sung cho Normal User -->
         <c:if test="${sessionScope.account != null && sessionScope.account.type == 2}">
+            <!-- 
+                Liên kết đến giỏ hàng:
+                - URL: /cart (không có tham số action)
+                - HTTP Method: GET (mặc định)
+                - Action: null (không gửi tham số action nào)
+                - Gửi đến: CartController.doGet()
+                - Xử lý: Vì action=null, nên viewCart() được gọi (hành động mặc định)
+            -->
             <li><a href="cart"> Cart 
                 <c:if test="${sessionScope.cart != null && !sessionScope.cart.items.isEmpty()}">
                     (${sessionScope.cart.items.size()})

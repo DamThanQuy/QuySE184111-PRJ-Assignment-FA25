@@ -24,6 +24,7 @@
         <div class="container">
             <h2>Pizzas Menu</h2>
             <!-- Search -->
+            <!-- Form tìm kiếm: client gửi yêu cầu GET đến HomeController với keyword/minPrice/maxPrice -->
             <form action="HomeController" method="get" class="search-box">
                 <label for="search">Search: </label>
                 <input id="search" type="text" name="keyword" placeholder="Search pizzas..." value="${param.keyword}"/>
@@ -46,7 +47,7 @@
                         <p><em>${p.categoryName}</em></p>
                         <p>${p.description}</p>
                         <c:if test="${sessionScope.account != null}">
-                            <!-- Add to Cart Form -->
+                            <!-- Form thêm giỏ hàng: gửi POST đến CartController (URL /cart) kèm action=add, productID, quantity -->
                             <form method="POST" action="cart" style="margin-top:10px;">
                                 <input type="hidden" name="action" value="add">
                                 <input type="hidden" name="productID" value="${p.productID}">

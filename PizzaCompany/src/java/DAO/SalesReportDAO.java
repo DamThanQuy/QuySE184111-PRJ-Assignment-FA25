@@ -19,13 +19,7 @@ import java.util.List;
  */
 public class SalesReportDAO {
     
-    /**
-     * Lấy báo cáo doanh số theo khoảng thời gian
-     * @param startDate Ngày bắt đầu
-     * @param endDate Ngày kết thúc
-     * @return Danh sách SalesReport sắp xếp theo TotalSales giảm dần
-     * @throws Exception
-     */
+
     public static List<SalesReport> getSalesReport(LocalDate startDate, LocalDate endDate) throws Exception {
         List<SalesReport> list = new ArrayList<>();
         
