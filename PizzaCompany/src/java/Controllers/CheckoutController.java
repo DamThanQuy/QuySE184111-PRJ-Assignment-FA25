@@ -60,11 +60,6 @@ public class CheckoutController extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("=== CHECKOUT ERROR ===");
-            System.out.println("Error message: " + e.getMessage());
-            System.out.println("Error class: " + e.getClass().getName());
-            e.printStackTrace();
-            System.out.println("=====================");
             
             request.setAttribute("error", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
@@ -154,39 +149,104 @@ public class CheckoutController extends HttpServlet {
             // Sử dụng accountID thay vì customerID
             int customerID = account.getAccountID();
             
+            // ============================================
+            // TRẠNG THÁI 1: TẠM THỜI (In-Memory Only)
+            // ============================================
             // Tạo Order
             Order order = new Order();
-            order.setCustomerID(customerID); // Sử dụng accountID
-            order.setOrderDate(LocalDateTime.now());
-            order.setShipAddress(shipAddress.trim());
-            order.setPhoneNumber(phoneNumber.trim());
+            order.setCustomerID(customerID);        // Có giá trị (5)
+            order.setOrderDate(LocalDateTime.now()); // Có giá trị (2025-11-04 15:30)
+            order.setShipAddress(shipAddress.trim()); // Có giá trị ("123 Nguyen Hue")
+            order.setPhoneNumber(phoneNumber.trim()); // Có giá trị ("0123456789")
+            // order.orderID = NULL (chưa có!)
+            //
+            // Vị trí: RAM (bộ nhớ)
+            // Database: TRỐNG (chưa có dữ liệu)
+            // Tính chất: Nếu server crash → MẤT DỮ LIỆU!
             
+            // ============================================
+            // TRẠNG THÁI 1.2: TẠM THỜI (OrderDetails)
+            // ============================================
             // Tạo OrderDetails từ Cart
             List<OrderDetail> orderDetails = new ArrayList<>();
             for (CartItem item : cart.getItems()) {
                 OrderDetail detail = new OrderDetail();
-                detail.setProductID(item.getProductID());
-                detail.setUnitPrice(item.getUnitPrice());
-                detail.setQuantity(item.getQuantity());
+                detail.setProductID(item.getProductID());   // Có (101, 205)
+                detail.setUnitPrice(item.getUnitPrice());   //  Có (150000, 15000)
+                detail.setQuantity(item.getQuantity());     //  Có (2, 3)
+                // detail.orderID = NULL (chưa có!)
                 orderDetails.add(detail);
             }
+            //
+            // Vị trí: RAM (bộ nhớ)
+            // Database: TRỐNG (chưa có dữ liệu)
+            // Tính chất: orderDetails cần OrderID từ Order trước
+            //           mới có thể lưu vào database
             
+            // ============================================
+            // CHUYỂN ĐỔI: TẠM THỜI → CHÍNH THỨC
+            // ============================================
             // Lưu vào database
             OrderDAO orderDAO = new OrderDAO();
             int orderID = orderDAO.createCompleteOrder(order, orderDetails);
+            // 
+            // Bên trong createCompleteOrder():
+            //   1. int orderID = createOrder(order)
+            //      → ps.executeUpdate() INSERT vào database
+            //      → Database trả về OrderID = 1001 (auto-generated)
+            //      → order.orderID được gán = 1001 
+            //
+            //   2. for (detail : orderDetails) {
+            //         detail.setOrderID(orderID) // = 1001
+            //      }
+            //      → orderDetails[0].orderID = 1001 
+            //      → orderDetails[1].orderID = 1001 
+            //
+            //   3. orderDetailDAO.createOrderDetails(orderDetails)
+            //      → INSERT vào database
+            //
+            //   4. conn.commit()
+            //      → Lưu VĨNH VIỄN (không mất khi server restart)
             
-            // Lấy thông tin đơn hàng vừa tạo
+            // ============================================
+            //  TRẠNG THÁI 2: CHÍNH THỨC (Persistent)
+            // ============================================
+            // Lấy thông tin đơn hàng vừa tạo (từ database)
             Order createdOrder = orderDAO.getOrderById(orderID);
+            // 
+            // Lúc này:
+            // - orderID = 1001 
+            // - createdOrder.orderID = 1001 
+            // - Database Orders: Có record OrderID=1001 
+            // - Dữ liệu VĨNH VIỄN (không mất khi restart)
+            
             OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
             List<OrderDetail> createdOrderDetails = orderDetailDAO.getOrderDetailsByOrderId(orderID);
+            // 
+            // Lấy danh sách OrderDetails từ database
+            // - createdOrderDetails[0].orderID = 1001 
+            // - createdOrderDetails[1].orderID = 1001 
+            // - Database OrderDetails: Có 2 records 
             
-            // Xóa giỏ hàng
+            // Xóa giỏ hàng từ Session (vì đã lưu vào database)
             session.removeAttribute("cart");
+            // 
+            // Lý do xóa: Order đã được lưu vĩnh viễn,
+            //           không cần giữ Cart trong Session nữa
             
-            // Chuyển đến trang xác nhận
+            // ============================================
+            //  HIỂN THỊ KẾT QUẢ
+            // ============================================
+            // Chuyển đến trang xác nhận (order-confirmation.jsp)
             request.setAttribute("order", createdOrder);
             request.setAttribute("orderDetails", createdOrderDetails);
             request.setAttribute("message", "Order placed successfully! Order ID: #" + orderID);
+            // 
+            // Hiển thị:
+            // - Order #1001 (từ database)
+            // - 2 sản phẩm trong đơn hàng
+            // - Địa chỉ giao hàng, số điện thoại
+            // - Tổng tiền
             request.getRequestDispatcher("order-confirmation.jsp").forward(request, response);
             
         } catch (Exception e) {

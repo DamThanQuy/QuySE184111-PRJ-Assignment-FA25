@@ -55,8 +55,10 @@
             
             <div class="checkout-content">
                 <!-- Order Summary -->
+                 
                 <div class="order-summary">
                     <h3>Tóm tắt đơn hàng</h3>
+                    <!-- kiểm tra giỏ hàng có dữ liệu không, duyệt qua từng item trong cart -->
                     <%
                         if (cart != null && !cart.getItems().isEmpty()) {
                             for (CartItem item : cart.getItems()) {

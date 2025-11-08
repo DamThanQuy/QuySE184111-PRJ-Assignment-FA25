@@ -42,6 +42,7 @@ public class CartController extends HttpServlet {
      * URL: GET /cart hoặc GET /cart?action=view
      * Chức năng: Hiển thị giỏ hàng
      */
+    // Entry point GET: hiển thị giỏ hàng (hoặc fallback processRequest)
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -63,6 +64,7 @@ public class CartController extends HttpServlet {
      * URL: POST /cart?action=add&productID=101&quantity=2
      * Chức năng: Thêm sản phẩm vào giỏ hàng
      */
+    // Entry point POST: phân nhánh add/update/remove dựa trên action
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -141,6 +143,7 @@ public class CartController extends HttpServlet {
     /**
      * Method thêm sản phẩm vào giỏ hàng
      */
+    // Thêm sản phẩm vào giỏ: validate input, lấy product, tạo/lấy Cart trong session
     private void addToCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -228,6 +231,7 @@ public class CartController extends HttpServlet {
     /**
      * Method cập nhật số lượng sản phẩm trong giỏ hàng
      */
+    // Cập nhật số lượng: đổi quantity hoặc xóa nếu 0
     private void updateCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -319,6 +323,7 @@ public class CartController extends HttpServlet {
     /**
      * Method xóa sản phẩm khỏi giỏ hàng
      */
+    // Xóa hoàn toàn sản phẩm khỏi giỏ
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {

@@ -37,10 +37,11 @@ public class OrderDAO {
             }
             ps.setString(3, order.getShipAddress());
             ps.setString(4, order.getPhoneNumber());
-            
-            int affectedRows = ps.executeUpdate();
+            // ============ THỜI ĐIỂM CHUYỂN ĐỔI ============
+            int affectedRows = ps.executeUpdate(); // ← INSERT vào database!
             
             if (affectedRows > 0) {
+                // ============ LẤY OrderID TỰ ĐỘNG SINH ============
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         return generatedKeys.getInt(1); // Trả về OrderID mới tạo
@@ -64,12 +65,14 @@ public class OrderDAO {
             
             // Tạo OrderDetails sử dụng OrderDetailDAO
             OrderDetailDAO orderDetailDAO = new OrderDetailDAO();
+            //Gán OrderID cho các OrderDetail
             for (OrderDetail detail : orderDetails) {
                 detail.setOrderID(orderID);
             }
+            //lưu vào DB
             orderDetailDAO.createOrderDetails(orderDetails);
             
-            conn.commit(); // Commit transaction
+            conn.commit(); // Commit transaction, lưu vĩnh viễn
             return orderID;
             
         } catch (SQLException e) {

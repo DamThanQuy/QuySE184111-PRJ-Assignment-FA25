@@ -15,27 +15,26 @@
         <title>Giỏ hàng - PizzaStore</title>
         <link rel="stylesheet" href="css/navbar.css">
         <style>
-            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-            .container { max-width: 1000px; margin: 0 auto; }
-            .cart-header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-            .cart-title { margin: 0; font-size: 24px; }
-            .message { padding: 10px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; }
-            .message.success { background: #d4edda; color: #155724; }
-            .message.error { background: #f8d7da; color: #721c24; }
-            .cart-content { background: white; border-radius: 8px; overflow: hidden; }
-            .cart-empty { padding: 40px; text-align: center; }
-            .btn-primary { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
-            .btn-danger { background: #dc3545; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; }
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #fff; }
+            .container { max-width: 960px; margin: 0 auto; }
+            .cart-header, .cart-content { background: #fff; border: 1px solid #ddd; border-radius: 4px; padding: 16px; margin-bottom: 16px; }
+            .cart-title { margin: 0 0 8px; font-size: 22px; }
+            .message { padding: 8px 12px; border-radius: 4px; margin-bottom: 16px; font-weight: 600; }
+            .message.success { background: #e6ffed; color: #23653a; }
+            .message.error { background: #ffecec; color: #9b1c1c; }
+            .cart-empty { padding: 32px; text-align: center; }
             .cart-items { width: 100%; border-collapse: collapse; }
-            .cart-items th { background: #f8f9fa; padding: 15px; text-align: left; border-bottom: 2px solid #dee2e6; }
-            .cart-items td { padding: 15px; border-bottom: 1px solid #dee2e6; }
-            .quantity-input { width: 60px; padding: 5px; text-align: center; }
-            .price { font-weight: bold; color: #28a745; }
-            .cart-summary { background: #f8f9fa; padding: 20px; border-top: 2px solid #dee2e6; }
-            .summary-total { font-size: 18px; font-weight: bold; border-top: 2px solid #dee2e6; padding-top: 10px; margin-top: 10px; }
+            .cart-items th, .cart-items td { padding: 10px; border-bottom: 1px solid #eee; text-align: left; }
+            .quantity-input { width: 60px; text-align: center; }
+            .price { font-weight: 600; color: #2f9e44; }
+            .cart-summary { margin-top: 16px; }
+            .summary-total { margin-top: 8px; font-weight: 600; }
             .cart-actions { margin-top: 20px; text-align: center; }
-            .btn-secondary { background: #6c757d; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-right: 10px; }
-            .btn-checkout { background: #28a745; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; }
+            .btn-primary, .btn-secondary, .btn-checkout, .btn-danger { display: inline-block; padding: 8px 16px; border: none; border-radius: 4px; color: #fff; text-decoration: none; cursor: pointer; }
+            .btn-primary { background: #4a74d1; }
+            .btn-secondary { background: #777; margin-right: 10px; }
+            .btn-checkout { background: #2f9e44; font-weight: 600; }
+            .btn-danger { background: #d64545; }
         </style>
     </head>
     <body>
@@ -68,12 +67,20 @@
             <!-- Cart Content -->
             <div class="cart-content">
                 <%
+                    // 1. Lấy đối tượng Cart từ request attribute (được đặt bởi CartController.viewCart())
                     Cart cart = (Cart) request.getAttribute("cart");
+                    
+                    // 2. Lấy giá trị isEmpty từ request attribute (kiểu Object vì attribute có thể là bất kỳ kiểu nào)
                     Object isEmptyObj = request.getAttribute("isEmpty");
+                    // Kiểm tra kiểu dữ liệu và chuyển đổi an toàn: nếu là Boolean thì dùng giá trị đó, nếu không thì mặc định là true
                     boolean isEmpty = (isEmptyObj instanceof Boolean) ? (Boolean) isEmptyObj : true;
+                    
+                    // 3. Lấy tổng số lượng sản phẩm từ request attribute
                     Object totalItemsObj = request.getAttribute("totalItems");
+                    // Kiểm tra kiểu dữ liệu và chuyển đổi an toàn: nếu là Integer thì dùng giá trị đó, nếu không thì mặc định là 0
                     int totalItems = (totalItemsObj instanceof Integer) ? (Integer) totalItemsObj : 0;
                     
+                    // 4. Kiểm tra nếu giỏ hàng trống → hiển thị thông báo giỏ hàng trống
                     if (isEmpty) {
                 %>
                     <!-- Empty Cart -->
@@ -103,27 +110,28 @@
                             %>
                                 <tr>
                                     <td>
-                                        <%= item.getProductName() %>
+                                        <%= item.getProductName() %> <!-- Hiển thị tên sản phẩm -->
                                     </td>
                                     <td class="price">
-                                        $<%= String.format("%.2f", item.getUnitPrice()) %>
+                                        $<%= String.format("%.2f", item.getUnitPrice()) %> <!-- Hiển thị price sản phẩm -->
                                     </td>
                                     <td>
                                         <!-- Update Quantity Form -->
                                         <form method="POST" action="cart" style="display: inline;">
                                             <input type="hidden" name="action" value="update">
                                             <input type="hidden" name="productID" value="<%= item.getProductID() %>">
+                                            <!-- Hiển thị quantity sản phẩm -->
                                             <input type="number" 
                                                    name="quantity" 
-                                                   value="<%= item.getQuantity() %>" 
+                                                   value="<%= item.getQuantity() %>"
                                                    min="0" 
                                                    max="99"
                                                    class="quantity-input"
-                                                   onchange="this.form.submit()">
+                                                   onchange="this.form.submit()" />
                                         </form>
                                     </td>
                                     <td class="price">
-                                        $<%= String.format("%.2f", item.getTotalPrice()) %>
+                                        $<%= String.format("%.2f", item.getTotalPrice()) %> 
                                     </td>
                                     <td>
                                         <!-- Remove Item Form -->
@@ -154,8 +162,12 @@
                     
                     <!-- Cart Actions -->
                     <div class="cart-actions">
-                        <a href="HomeController" class="btn-secondary">Tiếp tục mua sắm</a>
-                        <a href="checkout" class="btn-checkout">Thanh toán</a>
+                        <form action="HomeController" method="get" style="display:inline-block;">
+                            <button type="submit" class="btn-secondary">Tiếp tục mua sắm</button>
+                        </form>
+                        <form action="checkout" method="get" style="display:inline-block;">
+                            <button type="submit" class="btn-checkout">Thanh toán</button>
+                        </form>
                     </div>
                 <%
                     }
